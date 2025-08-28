@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ image_name }} - LightMedia</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="image-viewer-mode">
+    <!-- Image Viewer Header -->
+    <header class="image-viewer-header">
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <h2 class="image-title">{{ image_name }}</h2>
+        <div class="image-info">
+            <span>Image {{ current_index }} of {{ total_images }}</span>
+        </div>
+    </header>
+
+    <!-- Main Image Content -->
+    <main class="image-viewer-container">
+        <div class="image-navigation">
+            {% if prev_image %}
+            <a href="/image-viewer?file={{ prev_image }}" class="nav-btn prev-btn">
+                <i class="fas fa-arrow-left"></i> Previous
+            </a>
+            {% else %}
+            <span class="nav-btn prev-btn disabled">
+                <i class="fas fa-arrow-left"></i> Previous
+            </span>
+            {% endif %}
+
+            <div class="image-display">
+                <img 
+                    src="/media/{{ current_image }}" 
+                    alt="{{ image_name }}" 
+                    class="viewer-image"
+                    id="viewer-image"
+                    onclick="toggleFullscreen()"
+                    loading="eager"
+                >
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomImage(0.2)">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="zoom-btn" onclick="zoomImage(-0.2)">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="zoom-btn" onclick="resetZoom()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            {% if next_image %}
+            <a href="/image-viewer?file={{ next_image }}" class="nav-btn next-btn">
+                Next <i class="fas fa-arrow-right"></i>
+            </a>
+            {% else %}
+            <span class="nav-btn next-btn disabled">
+                Next <i class="fas fa-arrow-right"></i>
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- Image Actions -->
+        <div class="image-actions">
+            <a href="/media/{{ current_image }}" class="action-btn" download>
+                <i class="fas fa-download"></i> Download
+            </a>
+            <button class="action-btn" onclick="toggleFullscreen()">
+                <i class="fas fa-expand"></i> Fullscreen
+            </button>
+            <button class="action-btn" onclick="rotateImage()">
+                <i class="fas fa-redo"></i> Rotate
+            </button>
+        </div>
+
+        <!-- Thumbnail Navigation -->
+        {% if total_images > 1 %}
+        <div class="thumbnail-grid">
+            <h3>All Images in Folder</h3>
+            <div class="thumbnails">
+                <!-- This would show all images as clickable thumbnails -->
+                <!-- Implementation would require additional backend support -->
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        let currentScale = 1;
+        let currentRotation = 0;
+        const imageElement = document.getElementById('viewer-image');
+
+        function zoomImage(factor) {
+            if (imageElement) {
+                currentScale += factor;
+                currentScale = Math.max(0.1, Math.min(5, currentScale));
+                updateImageTransform();
+            }
+        }
+
+        function resetZoom() {
+            currentScale = 1;
+            currentRotation = 0;
+            updateImageTransform();
+        }
+
+        function rotateImage() {
+            currentRotation += 90;
+            if (currentRotation >= 360) currentRotation = 0;
+            updateImageTransform();
+        }
+
+        function updateImageTransform() {
+            imageElement.style.transform = `scale(${currentScale}) rotate(${currentRotation}deg)`;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Fullscreen error:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    {% if prev_image %}
+                    window.location.href = '/image-viewer?file={{ prev_image }}';
+                    {% endif %}
+                    break;
+                case 'ArrowRight':
+                    {% if next_image %}
+                    window.location.href = '/image-viewer?file={{ next_image }}';
+                    {% endif %}
+                    break;
+                case 'Escape':
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                    break;
+                case '+':
+                case '=':
+                    zoomImage(0.2);
+                    break;
+                case '-':
+                    zoomImage(-0.2);
+                    break;
+                case '0':
+                    resetZoom();
+                    break;
+                case 'r':
+                case 'R':
+                    rotateImage();
+                    break;
+            }
+        });
+
+        // Touch gestures for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartDistance = 0;
+
+        imageElement.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            
+            if (e.touches.length === 2) {
+                touchStartDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            }
+        });
+
+        imageElement.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 1) {
+                // Single finger touch - panning
+                // Implementation for panning when zoomed
+            } else if (e.touches.length === 2) {
+                // Pinch zoom
+                const currentDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                
+                const zoomFactor = (currentDistance - touchStartDistance) * 0.01;
+                zoomImage(zoomFactor);
+                touchStartDistance = currentDistance;
+            }
+        });
+
+        imageElement.addEventListener('touchend', function(e) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            
+            // Swipe detection for navigation
+            if (Math.abs(diffX) > 50 && Math.abs(diffY) < 50) {
+                if (diffX > 0 && {{ prev_image is not none }}) {
+                    // Swipe right - previous image
+                    window.location.href = '/image-viewer?file={{ prev_image }}';
+                } else if (diffX < 0 && {{ next_image is not none }}) {
+                    // Swipe left - next image
+                    window.location.href = '/image-viewer?file={{ next_image }}';
+                }
+            }
+        });
+
+        // Double tap to zoom
+        let lastTap = 0;
+        imageElement.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap detected
+                if (currentScale === 1) {
+                    zoomImage(1); // Zoom in
+                } else {
+                    resetZoom(); // Reset zoom
+                }
+            }
+            
+            lastTap = currentTime;
+        });
+    </script>
+</body>
+</html>

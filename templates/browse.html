@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Network Media Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        .breadcrumb {
+            padding: 15px 20px;
+            background: #ecf0f1;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            border-bottom: 1px solid #ddd;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .file-list {
+            padding: 20px;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+        .file-item:hover {
+            background: #f8f9fa;
+        }
+        .file-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        .file-name {
+            flex: 1;
+            font-size: 1rem;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        .file-name:hover {
+            color: #3498db;
+        }
+        .file-size {
+            width: 100px;
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        .folder .file-name {
+            font-weight: 600;
+        }
+        .actions {
+            margin-left: 15px;
+        }
+        .download-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .download-btn:hover {
+            background: #2980b9;
+        }
+        .empty-folder {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 768px) {
+            .file-item {
+                flex-wrap: wrap;
+            }
+            .file-size {
+                width: 100%;
+                text-align: left;
+                margin-top: 5px;
+                padding-left: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Local Network Media Server</h1>
+            <p>Browse and access your media files from any device on the network</p>
+        </header>
+        
+        <div class="breadcrumb">
+            <a href="/">Home</a> 
+            {% for part in current_path.split('/') %}
+                {% if part %}
+                    / <a href="/browse/{{ '/'.join(current_path.split('/')[:loop.index]) }}">{{ part }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <div class="file-list">
+            {% if items %}
+                {% for item in items %}
+                    <div class="file-item {{ item.type }}">
+                        <div class="file-icon">{{ item.icon }}</div>
+                        {% if item.type == 'folder' %}
+                            <a href="/browse/{{ item.path }}" class="file-name">{{ item.name }}</a>
+                        {% else %}
+                            <a href="/download/{{ item.path }}" class="file-name">{{ item.name }}</a>
+                            <div class="actions">
+                                <a href="/download/{{ item.path }}" class="download-btn">Download</a>
+                            </div>
+                        {% endif %}
+                        <div class="file-size">{{ item.formatted_size }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-folder">
+                    <p>This folder is empty</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <footer>
+            <p>Local Media Server • {{ items|length }} items</p>
+        </footer>
+    </div>
+</body>
+</html>
