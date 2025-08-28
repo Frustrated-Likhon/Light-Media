@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LightMedia - Lightweight Media Server</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🎬 LightMedia</h1>
+            <p>Lightweight Media Server</p>
+        </div>
+        <div class="header-actions">
+            <a href="/browse" class="nav-btn">
+                <i class="fas fa-folder"></i> Browse Files
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🎬</div>
+                <div class="stat-info">
+                    <h3>{{ media_files.video|length }}</h3>
+                    <p>Videos</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎵</div>
+                <div class="stat-info">
+                    <h3>{{ media_files.audio|length }}</h3>
+                    <p>Music</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🖼️</div>
+                <div class="stat-info">
+                    <h3>{{ media_files.image|length }}</h3>
+                    <p>Images</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                    <h3>{{ total_files }}</h3>
+                    <p>Total Files</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos Section -->
+        {% if media_files.video %}
+        <div class="media-section">
+            <div class="section-header">
+                <h2>🎬 Videos ({{ media_files.video|length }})</h2>
+            </div>
+            <div class="media-grid">
+                {% for file in media_files.video %}
+                <div class="media-card" data-type="video">
+                    <div class="media-thumbnail">
+                        <div class="media-icon">{{ file.icon }}</div>
+                        <div class="play-overlay" onclick="playMedia('{{ file.path }}')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3 class="media-title" title="{{ file.name }}">{{ file.name|truncate(30) }}</h3>
+                        <div class="media-meta">
+                            <span class="file-size">{{ file.formatted_size }}</span>
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-btn play-btn" onclick="playMedia('{{ file.path }}')">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            <a href="/media/{{ file.path }}" class="action-btn download-btn" download>
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Music Section -->
+        {% if media_files.audio %}
+        <div class="media-section">
+            <div class="section-header">
+                <h2>🎵 Music ({{ media_files.audio|length }})</h2>
+            </div>
+            <div class="media-grid">
+                {% for file in media_files.audio %}
+                <div class="media-card" data-type="audio">
+                    <div class="media-thumbnail">
+                        <div class="media-icon">{{ file.icon }}</div>
+                        <div class="play-overlay" onclick="playMedia('{{ file.path }}')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3 class="media-title" title="{{ file.name }}">{{ file.name|truncate(30) }}</h3>
+                        <div class="media-meta">
+                            <span class="file-size">{{ file.formatted_size }}</span>
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-btn play-btn" onclick="playMedia('{{ file.path }}')">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            <a href="/media/{{ file.path }}" class="action-btn download-btn" download>
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Images Section -->
+        {% if media_files.image %}
+        <div class="media-section">
+            <div class="section-header">
+                <h2>🖼️ Images ({{ media_files.image|length }})</h2>
+            </div>
+            <div class="media-grid">
+                {% for file in media_files.image %}
+                <div class="media-card" data-type="image">
+                    <div class="media-thumbnail">
+                        <div class="media-icon">{{ file.icon }}</div>
+                        <div class="play-overlay" onclick="viewImage('{{ file.path }}')">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <h3 class="media-title" title="{{ file.name }}">{{ file.name|truncate(30) }}</h3>
+                        <div class="media-meta">
+                            <span class="file-size">{{ file.formatted_size }}</span>
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-btn view-btn" onclick="viewImage('{{ file.path }}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <a href="/media/{{ file.path }}" class="action-btn download-btn" download>
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Empty State -->
+        {% if total_files == 0 %}
+        <div class="empty-state">
+            <i class="fas fa-film"></i>
+            <h3>No media files found</h3>
+            <p>Add media files to the 'media_files' folder to get started</p>
+            <a href="/browse" class="nav-btn">
+                <i class="fas fa-folder-open"></i> Browse Files
+            </a>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>LightMedia Server - Lightweight alternative to Jellyfin</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function playMedia(filePath) {
+            window.open(`/player?file=${encodeURIComponent(filePath)}`, '_blank');
+        }
+
+        function viewImage(filePath) {
+            window.open(`/image-viewer?file=${encodeURIComponent(filePath)}`, '_blank');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '/') {
+                e.preventDefault();
+                // Focus search if implemented
+            }
+        });
+    </script>
+</body>
+</html>
