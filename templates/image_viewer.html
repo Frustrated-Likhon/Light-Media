@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="image-viewer-mode">
-    <!-- Image Viewer Header -->
+    
     <header class="image-viewer-header">
         <button class="back-btn" onclick="window.history.back()">
             <i class="fas fa-arrow-left"></i> Back
@@ -19,7 +19,7 @@
         </div>
     </header>
 
-    <!-- Main Image Content -->
+ 
     <main class="image-viewer-container">
         <div class="image-navigation">
             {% if prev_image %}
@@ -65,7 +65,7 @@
             {% endif %}
         </div>
 
-        <!-- Image Actions -->
+   
         <div class="image-actions">
             <a href="/media/{{ current_image }}" class="action-btn" download>
                 <i class="fas fa-download"></i> Download
@@ -78,19 +78,17 @@
             </button>
         </div>
 
-        <!-- Thumbnail Navigation -->
+      
         {% if total_images > 1 %}
         <div class="thumbnail-grid">
             <h3>All Images in Folder</h3>
             <div class="thumbnails">
-                <!-- This would show all images as clickable thumbnails -->
-                <!-- Implementation would require additional backend support -->
+               
             </div>
         </div>
         {% endif %}
     </main>
 
-    <!-- JavaScript -->
     <script>
         let currentScale = 1;
         let currentRotation = 0;
@@ -130,7 +128,7 @@
             }
         }
 
-        // Keyboard navigation
+
         document.addEventListener('keydown', function(e) {
             switch(e.key) {
                 case 'ArrowLeft':
@@ -165,7 +163,7 @@
             }
         });
 
-        // Touch gestures for mobile
+ 
         let touchStartX = 0;
         let touchStartY = 0;
         let touchStartDistance = 0;
@@ -184,10 +182,9 @@
 
         imageElement.addEventListener('touchmove', function(e) {
             if (e.touches.length === 1) {
-                // Single finger touch - panning
-                // Implementation for panning when zoomed
+              
             } else if (e.touches.length === 2) {
-                // Pinch zoom
+             
                 const currentDistance = Math.hypot(
                     e.touches[0].clientX - e.touches[1].clientX,
                     e.touches[0].clientY - e.touches[1].clientY
@@ -206,30 +203,30 @@
             const diffX = touchEndX - touchStartX;
             const diffY = touchEndY - touchStartY;
             
-            // Swipe detection for navigation
+         
             if (Math.abs(diffX) > 50 && Math.abs(diffY) < 50) {
                 if (diffX > 0 && {{ prev_image is not none }}) {
-                    // Swipe right - previous image
+                 
                     window.location.href = '/image-viewer?file={{ prev_image }}';
                 } else if (diffX < 0 && {{ next_image is not none }}) {
-                    // Swipe left - next image
+               
                     window.location.href = '/image-viewer?file={{ next_image }}';
                 }
             }
         });
 
-        // Double tap to zoom
+   
         let lastTap = 0;
         imageElement.addEventListener('touchend', function(e) {
             const currentTime = new Date().getTime();
             const tapLength = currentTime - lastTap;
             
             if (tapLength < 300 && tapLength > 0) {
-                // Double tap detected
+               
                 if (currentScale === 1) {
-                    zoomImage(1); // Zoom in
+                    zoomImage(1);
                 } else {
-                    resetZoom(); // Reset zoom
+                    resetZoom(); 
                 }
             }
             
@@ -237,4 +234,5 @@
         });
     </script>
 </body>
+
 </html>
