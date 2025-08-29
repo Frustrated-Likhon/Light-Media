@@ -9,15 +9,15 @@ import json
 app = Flask(__name__)
 app.secret_key = 'local-media-server-secret-2024'
 
-# Configuration
-MEDIA_FOLDER = os.path.abspath("media_files")  # Always use absolute path
+
+MEDIA_FOLDER = os.path.abspath("media_files")  
 ALLOWED_EXTENSIONS = {
     'video': ['mp4', 'mkv', 'avi', 'mov', 'wmv', 'flv', 'webm', 'm4v'],
     'audio': ['mp3', 'm4a', 'wav', 'flac', 'aac', 'ogg', 'wma'],
     'image': ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
 }
 
-# Create media folder if it doesn't exist
+
 os.makedirs(MEDIA_FOLDER, exist_ok=True)
 
 
@@ -32,7 +32,7 @@ def get_media_files():
     for category, extensions in ALLOWED_EXTENSIONS.items():
         for ext in extensions:
             for file_path in glob.glob(os.path.join(MEDIA_FOLDER, '**', f'*.{ext}'), recursive=True):
-                relative_path = os.path.relpath(file_path, MEDIA_FOLDER).replace("\\", "/")  # ✅ normalize slashes
+                relative_path = os.path.relpath(file_path, MEDIA_FOLDER).replace("\\", "/")  
                 file_name = os.path.basename(file_path)
 
                 file_info = {
@@ -47,7 +47,7 @@ def get_media_files():
 
                 media_files[category].append(file_info)
 
-    # Sort each category by name
+
     for category in media_files:
         media_files[category].sort(key=lambda x: x['name'].lower())
 
@@ -136,7 +136,7 @@ def image_viewer():
         for img_path in glob.glob(os.path.join(image_dir, f'*.{ext}')):
             image_files.append({
                 'name': os.path.basename(img_path),
-                'path': os.path.relpath(img_path, MEDIA_FOLDER).replace("\\", "/")  # ✅ normalize
+                'path': os.path.relpath(img_path, MEDIA_FOLDER).replace("\\", "/") 
             })
 
     image_files.sort(key=lambda x: x['name'].lower())
@@ -171,14 +171,14 @@ def browse():
         parent_path = os.path.dirname(folder_path)
         items.append({
             'name': '..',
-            'path': parent_path.replace("\\", "/"),  # ✅ normalize
+            'path': parent_path.replace("\\", "/"), 
             'type': 'folder',
             'icon': '📁'
         })
 
     for item in os.listdir(full_path):
         item_path = os.path.join(full_path, item)
-        relative_path = os.path.join(folder_path, item).replace("\\", "/")  # ✅ normalize
+        relative_path = os.path.join(folder_path, item).replace("\\", "/")  
 
         if os.path.isdir(item_path):
             items.append({
@@ -211,3 +211,4 @@ def browse():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
