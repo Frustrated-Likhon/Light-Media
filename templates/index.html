@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
+
     <header class="header">
         <div class="header-content">
             <h1>🎬 LightMedia</h1>
@@ -21,9 +21,9 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+
     <main class="main-content">
-        <!-- Quick Stats -->
+  
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">🎬</div>
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <!-- Videos Section -->
+
         {% if media_files.video %}
         <div class="media-section">
             <div class="section-header">
@@ -90,7 +90,7 @@
         </div>
         {% endif %}
 
-        <!-- Music Section -->
+ 
         {% if media_files.audio %}
         <div class="media-section">
             <div class="section-header">
@@ -125,7 +125,7 @@
         </div>
         {% endif %}
 
-        <!-- Images Section -->
+  
         {% if media_files.image %}
         <div class="media-section">
             <div class="section-header">
@@ -160,7 +160,7 @@
         </div>
         {% endif %}
 
-        <!-- Empty State -->
+
         {% if total_files == 0 %}
         <div class="empty-state">
             <i class="fas fa-film"></i>
@@ -173,12 +173,12 @@
         {% endif %}
     </main>
 
-    <!-- Footer -->
+
     <footer class="footer">
         <p>LightMedia Server - Lightweight alternative to Jellyfin</p>
     </footer>
 
-    <!-- JavaScript -->
+
     <script>
         function playMedia(filePath) {
             window.open(`/player?file=${encodeURIComponent(filePath)}`, '_blank');
@@ -188,11 +188,11 @@
             window.open(`/image-viewer?file=${encodeURIComponent(filePath)}`, '_blank');
         }
 
-        // Keyboard shortcuts
+   
         document.addEventListener('keydown', function(e) {
             if (e.key === '/') {
                 e.preventDefault();
-                // Focus search if implemented
+               
             }
         });
     </script>
