@@ -1,4 +1,3 @@
-/* === DARK THEME VARIABLES === */
 :root {
     --bg-primary: #0f0f0f;
     --bg-secondary: #1a1a1a;
@@ -13,7 +12,7 @@
     --gradient: linear-gradient(135deg, #ff4444, #ff6b6b);
 }
 
-/* === BASE STYLES === */
+
 * {
     margin: 0;
     padding: 0;
@@ -28,14 +27,14 @@ body {
     min-height: 100vh;
 }
 
-/* === LAYOUT === */
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* === HEADER === */
+
 .header {
     background: var(--bg-secondary);
     padding: 1.5rem 2rem;
@@ -66,7 +65,6 @@ body {
     gap: 1rem;
 }
 
-/* === STATS GRID === */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -114,7 +112,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* === MEDIA GRID === */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -268,7 +265,6 @@ body {
     background: #3d3d3d;
 }
 
-/* === PLAYER MODE === */
 .player-mode {
     background: #000;
 }
@@ -416,7 +412,6 @@ body {
     cursor: pointer;
 }
 
-/* === EMPTY STATE === */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -435,7 +430,6 @@ body {
     color: var(--text-primary);
 }
 
-/* === NAVIGATION === */
 .nav-btn {
     background: var(--accent-color);
     color: white;
@@ -455,7 +449,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* === FOOTER === */
 .footer {
     text-align: center;
     padding: 2rem;
@@ -464,7 +457,6 @@ body {
     border-top: 1px solid var(--border-color);
 }
 
-/* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -517,7 +509,6 @@ body {
     }
 }
 
-/* === UTILITY CLASSES === */
 .hidden {
     display: none !important;
 }
@@ -530,7 +521,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* === SCROLLBAR === */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -548,9 +538,7 @@ body {
     background: var(--accent-color);
 }
 
-/* Add these to your existing styles.css */
 
-/* Notification styles */
 .notification {
     position: fixed;
     top: 20px;
@@ -580,7 +568,7 @@ body {
     border-left: 4px solid var(--error-color);
 }
 
-/* Favorite button styles */
+
 .favorite-btn {
     background: var(--bg-tertiary) !important;
     color: var(--text-primary) !important;
@@ -591,7 +579,7 @@ body {
     color: white !important;
 }
 
-/* Loading animation */
+
 .loading-spinner {
     display: inline-block;
     width: 20px;
@@ -606,7 +594,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* Search box styles */
+
 .search-container {
     position: relative;
     margin-bottom: 2rem;
@@ -627,7 +615,7 @@ body {
     border-color: var(--accent-color);
 }
 
-/* Mobile menu */
+
 .mobile-menu-btn {
     display: none;
     background: none;
@@ -660,7 +648,7 @@ body {
     }
 }
 
-/* Overlay for mobile menu */
+
 .overlay {
     position: fixed;
     top: 0;
@@ -676,7 +664,7 @@ body {
     display: block;
 }
 
-/* Image Viewer Specific Styles */
+
 .image-viewer-mode {
     background: #000;
     color: white;
@@ -774,7 +762,7 @@ body {
     cursor: not-allowed;
 }
 
-/* Media Sections */
+
 .media-section {
     margin-bottom: 3rem;
 }
@@ -785,7 +773,7 @@ body {
     margin-bottom: 2rem;
 }
 
-/* View button for images */
+
 .view-btn {
     background: #4CAF50 !important;
 }
@@ -794,7 +782,7 @@ body {
     background: #45a049 !important;
 }
 
-/* Responsive adjustments for image viewer */
+
 @media (max-width: 768px) {
     .image-navigation {
         flex-direction: column;
@@ -813,7 +801,6 @@ body {
     }
 }
 
-/* Grouped media sections */
 .media-section:not(:last-child) {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 2rem;
