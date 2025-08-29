@@ -1,4 +1,3 @@
-// Media Server JavaScript
 class LightMediaPlayer {
     constructor() {
         this.currentPlayer = null;
@@ -14,13 +13,12 @@ class LightMediaPlayer {
     }
 
     setupEventListeners() {
-        // Search functionality
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => this.searchMedia(e.target.value));
         }
 
-        // View toggle buttons
+        
         const viewButtons = document.querySelectorAll('.view-btn');
         viewButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -29,16 +27,14 @@ class LightMediaPlayer {
             });
         });
 
-        // Lazy loading for images
         this.setupLazyLoading();
 
-        // Infinite scroll (if needed)
         this.setupInfiniteScroll();
     }
 
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            // Global shortcuts (work anywhere on the page)
+      
             if (e.key === '/') {
                 e.preventDefault();
                 const searchInput = document.getElementById('search-input');
@@ -47,7 +43,6 @@ class LightMediaPlayer {
                 }
             }
 
-            // Player-specific shortcuts
             if (this.currentPlayer) {
                 this.handlePlayerShortcuts(e);
             }
@@ -122,29 +117,28 @@ class LightMediaPlayer {
             const diffY = touchEndY - touchStartY;
             const duration = touchEndTime - touchStartTime;
 
-            // Horizontal swipe (seek)
+         
             if (Math.abs(diffX) > 50 && Math.abs(diffY) < 50 && duration < 300) {
                 if (this.currentPlayer) {
                     if (diffX > 0) {
-                        this.skip(10); // Swipe right = forward
+                        this.skip(10); 
                     } else {
-                        this.skip(-10); // Swipe left = backward
+                        this.skip(-10); 
                     }
                 }
             }
 
-            // Vertical swipe (volume/brigthness)
             if (Math.abs(diffY) > 50 && Math.abs(diffX) < 50 && duration < 300) {
                 if (this.currentPlayer) {
                     if (diffY > 0) {
-                        this.adjustVolume(-0.1); // Swipe down = volume down
+                        this.adjustVolume(-0.1); 
                     } else {
-                        this.adjustVolume(0.1); // Swipe up = volume up
+                        this.adjustVolume(0.1); 
                     }
                 }
             }
 
-            // Double tap (play/pause)
+            
             if (duration < 300) {
                 if (this.lastTouchTime && Date.now() - this.lastTouchTime < 300) {
                     this.togglePlay();
@@ -166,10 +160,8 @@ class LightMediaPlayer {
             });
         };
 
-        // Load images that are already in view
         lazyLoad();
 
-        // Load images on scroll
         window.addEventListener('scroll', lazyLoad);
         window.addEventListener('resize', lazyLoad);
     }
@@ -188,8 +180,7 @@ class LightMediaPlayer {
     }
 
     async loadMoreMedia() {
-        // This would typically make an API call to load more media
-        // For now, it's a placeholder for future implementation
+
         console.log('Loading more media...');
     }
 
@@ -243,7 +234,6 @@ class LightMediaPlayer {
         }
     }
 
-    // Player control methods
     playMedia(filePath) {
         window.open(`/player?file=${encodeURIComponent(filePath)}`, '_blank');
     }
@@ -294,14 +284,12 @@ class LightMediaPlayer {
         }
     }
 
-    // Utility methods
     formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
-    // Initialize player when page loads
     initializePlayer() {
         this.currentPlayer = document.getElementById('media-player');
         
@@ -352,21 +340,18 @@ class LightMediaPlayer {
                 this.currentPlayer.currentTime = 0;
             });
 
-            // Progress bar seeking
             progressBar.addEventListener('input', (e) => {
                 if (this.currentPlayer.duration) {
                     this.currentPlayer.currentTime = (e.target.value / 100) * this.currentPlayer.duration;
                 }
             });
 
-            // Volume control
             volumeBar.addEventListener('input', (e) => {
                 this.currentPlayer.volume = e.target.value;
             });
         }
     }
 
-    // File operations
     async downloadFile(filePath, fileName) {
         try {
             const response = await fetch(`/media/${filePath}`);
@@ -385,7 +370,6 @@ class LightMediaPlayer {
         }
     }
 
-    // Favorite system (local storage based)
     toggleFavorite(filePath) {
         const favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
         
@@ -414,7 +398,6 @@ class LightMediaPlayer {
         }
     }
 
-    // Playlist functionality
     addToPlaylist(filePath) {
         const playlist = JSON.parse(localStorage.getItem('playlist') || '[]');
         
@@ -426,7 +409,6 @@ class LightMediaPlayer {
     }
 
     showNotification(message, type = 'success') {
-        // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.innerHTML = `
@@ -434,15 +416,12 @@ class LightMediaPlayer {
             <span>${message}</span>
         `;
 
-        // Add to page
         document.body.appendChild(notification);
 
-        // Animate in
         setTimeout(() => {
             notification.classList.add('show');
         }, 100);
 
-        // Remove after delay
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => {
@@ -452,16 +431,13 @@ class LightMediaPlayer {
     }
 }
 
-// Initialize the media player when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.mediaPlayer = new LightMediaPlayer();
     
-    // Initialize player if we're on the player page
     if (document.getElementById('media-player')) {
         window.mediaPlayer.initializePlayer();
     }
 
-    // Add favorite buttons to media cards
     const mediaCards = document.querySelectorAll('.media-card');
     mediaCards.forEach(card => {
         const filePath = card.querySelector('.play-btn').getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -476,12 +452,10 @@ document.addEventListener('DOMContentLoaded', () => {
             actions.appendChild(favoriteBtn);
         }
 
-        // Update initial favorite state
         window.mediaPlayer.updateFavoriteUI(filePath);
     });
 });
 
-// Service Worker for offline functionality (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then((registration) => {
@@ -493,4 +467,5 @@ if ('serviceWorker' in navigator) {
 }
 
 // Export for global access
+
 window.LightMediaPlayer = LightMediaPlayer;
